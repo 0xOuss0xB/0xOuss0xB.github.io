@@ -61,7 +61,7 @@ theme_mode: dark
 
 cdn:
 
-avatar: /assets/img/favicons/favicon-128x128.png 
+avatar:
 
 social_preview_image:
 
