@@ -7,11 +7,12 @@ lang: en
 timezone: Europe/Paris
 
 title: 0xOuss0xB
-tagline: Offensive Security • HTB Writeups • CVE Research
+tagline: "Pentester • Offensive Security • From the Field"
 
 description: >-
-  Blog offensif — writeups HackTheBox, analyses de CVE, pentest web et Active Directory.
-  Notes de terrain d'un pentester.
+  Offensive security blog by 0xOuss0xB — web exploitation, Active Directory attacks,
+  CVE analysis, tool reviews, AI & cyber, and real-world pentest insights.
+  Notes from the trenches of a professional pentester.
 
 url: "https://0xOuss0xB.github.io"
 
@@ -19,14 +20,15 @@ github:
   username: 0xOuss0xB
 
 twitter:
-  username: # laisse vide si pas de Twitter
+  username:
 
 social:
   name: 0xOuss0xB
-  email: # ton email si tu veux
+  email:
   fediverse_handle:
   links:
     - https://github.com/0xOuss0xB
+    - https://www.linkedin.com/in/oussama-ben-moussa-113196281
 
 # Site Verification Settings
 webmaster_verifications:
@@ -155,6 +157,7 @@ exclude:
   - purgecss.js
   - "*.config.js"
   - "package*.json"
+  - WRITING-GUIDE.md
 
 jekyll-archives:
   enabled: [categories, tags]
