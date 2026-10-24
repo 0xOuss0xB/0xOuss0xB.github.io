@@ -13,7 +13,13 @@
 | **CVE Analysis** | `CVE Analysis` | Vulnerability deep dives | CVE research, PoCs, patch analysis |
 | **Tools** | `Tools` | Tool reviews & custom scripts | Offensive tools, automation, scripts |
 | **AI & Cyber** | `AI & Cyber` | AI meets cybersecurity | LLM security, AI-assisted pentesting, prompt injection |
+| **Mobile** | `Mobile` | Mobile app security | Android/iOS, static & dynamic analysis, Frida |
+| **Cloud** | `Cloud` | Cloud security | AWS/Azure/GCP misconfig, IAM abuse, container escape |
+| **Code Audit** | `Code Audit` | Source code review | Whitebox analysis, SAST, vuln discovery |
 | **Articles** | `Articles` | General methodology & insights | Career tips, methodology, field observations |
+
+> Chaque catégorie a son dossier d'images : `assets/img/posts/<slug-dossier>/`
+> (`web`, `active-directory`, `external`, `cve`, `tools`, `ai-cyber`, `mobile`, `cloud`, `code-audit`, `articles`, `research`).
 
 ### Writeup Sub-categories (second level)
 
@@ -22,6 +28,10 @@ Use two-level categories for writeups:
 - `categories: [Writeups, HackSmarter]`
 - `categories: [Writeups, TryHackMe]`
 - `categories: [Writeups, VulnLab]`
+
+**Convention d'images pour les writeups :** un dossier dédié par box/lab,
+`assets/img/posts/<nom-de-box>/` (ex. `city-council/`, `stellarcomms/`),
+et non le dossier d'une catégorie.
 
 ### Standard Tags
 
@@ -53,7 +63,7 @@ _posts/YYYY-MM-DD-slug-title.md
 ```yaml
 ---
 title: "Clear, Descriptive Title"
-date: YYYY-MM-DD
+date: YYYY-MM-DD HH:MM:SS +0200   # heure + timezone : évite les posts "futurs" non publiés
 categories: [Category]           # or [Category, SubCategory]
 tags: [tag1, tag2, tag3]         # 3-8 tags, lowercase
 description: "One compelling sentence for SEO and social previews."

@@ -14,7 +14,7 @@ description: >-
   CVE analysis, tool reviews, AI & cyber, and real-world pentest insights.
   Notes from the trenches of a professional pentester.
 
-url: "https://0xOuss0xB.github.io"
+url: "https://0xouss0xb.github.io"
 
 github:
   username: 0xOuss0xB
@@ -121,7 +121,7 @@ defaults:
       type: posts
     values:
       layout: post
-      comments: true
+      comments: false # passe à true une fois Giscus configuré (repo_id/category_id remplis ci-dessus)
       toc: true
       permalink: /posts/:title/
   - scope:

@@ -3,16 +3,19 @@
 - type: github
   icon: "fab fa-github"
 
-- type: twitter
-  icon: "fa-brands fa-x-twitter"
-
-- type: email
-  icon: "fas fa-envelope"
-  noblank: true # open link in current tab
+- type: linkedin
+  icon: "fab fa-linkedin"
+  url: "https://www.linkedin.com/in/oussama-ben-moussa-113196281"
 
 - type: rss
   icon: "fas fa-rss"
   noblank: true
+
+# X/Twitter retiré : aucun compte configuré (twitter.username vide dans _config.yml).
+# Email retiré : aucune adresse publiée dans social.email. Décommente et renseigne pour réactiver.
+# - type: email
+#   icon: "fas fa-envelope"
+#   noblank: true
 # Uncomment and complete the url below to enable more contact options
 #
 # - type: mastodon
