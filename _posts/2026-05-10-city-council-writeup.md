@@ -4,9 +4,6 @@ date: 2026-05-10 00:00:00 +0000
 categories: [Writeups, HackSmarter]
 tags: [active-directory, kerberoasting, ntlm, dpapi, bloodhound, winrm, privilege-escalation, impacket, responder, acl-abuse, reverse-engineering, smb]
 description: "Full AD domain compromise chaining 12 misconfigurations — from zero credentials to Domain Admin."
-image:
-  path: /assets/img/posts/city-council/banner.png
-  alt: "City Council — AD Attack Chain"
 ---
 
 ## Vue d'ensemble

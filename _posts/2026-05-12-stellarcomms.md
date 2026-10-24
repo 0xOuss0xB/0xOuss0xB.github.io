@@ -4,9 +4,6 @@ date: 2026-05-12
 categories: [Writeups, HackSmarter]
 tags: [active-directory, bloodhound, dcsync, gmsa, acl-abuse, winrm, credential-theft]
 description: "HackSmarter lab — from a single username to full domain compromise via gMSA abuse and DCSync."
-image:
-  path: /assets/img/posts/stellarcomms/banner.png
-  alt: "StellarComms — AD Attack Chain"
 ---
 
 # StellarComms — Writeup
