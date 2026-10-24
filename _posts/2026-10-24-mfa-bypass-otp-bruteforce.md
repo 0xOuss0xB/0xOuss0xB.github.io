@@ -9,7 +9,6 @@ description: "Bypass complet du MFA : l'endpoint TOTP ne vérifie jamais le mot 
 ## TL;DR
 
 Lors d'un pentest, on identifie que l'endpoint de vérification TOTP (/api/authentication/verifyTotp) ne vérifie pas si le mot de passe a été validé avant de passer à l'étape de double authentification. Un attaquant peut donc obtenir un JWT valide en fournissant uniquement un email valide et un code TOTP — le mot de passe est complètement ignoré. Deuxième problème : aucun rate limiting n'est en place sur cet endpoint, ce qui permet de bruteforcer les 1 000 000 de combinaisons possibles (000000–999999) sans aucune restriction.
----
 
 ## La vulnérabilité
 
