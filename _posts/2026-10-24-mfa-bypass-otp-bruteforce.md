@@ -1,18 +1,14 @@
 ---
-title: "Bypass MFA — Quand le TOTP remplace le mot de passe au lieu de le compléter"
+title: "Bypass MFA : Quand le TOTP remplace le mot de passe au lieu de le compléter"
 date: 2026-10-24
 categories: [Web Security]
 tags: [authentication-bypass, mfa, otp, bruteforce, cwe-307]
-description: "Bypass complet du MFA — l'endpoint TOTP ne vérifie jamais le mot de passe, un bruteforce de 6 chiffres suffit pour obtenir un JWT."
+description: "Bypass complet du MFA : l'endpoint TOTP ne vérifie jamais le mot de passe."
 ---
 
 ## TL;DR
 
-Lors d'un pentest, on identifie que l'endpoint de vérification TOTP (`/api/authentication/verifyTotp`) est accessible **sans authentification préalable par mot de passe**. Il suffit de connaître l'email d'un utilisateur pour bruteforcer le code à 6 chiffres et récupérer un JWT. Aucun rate limiting, aucun lockout.
-
-> **Disclaimer :** Test réalisé dans le cadre d'une mission autorisée.
-{: .prompt-danger }
-
+Lors d'un pentest, on identifie que l'endpoint de vérification TOTP (/api/authentication/verifyTotp) ne vérifie pas si le mot de passe a été validé avant de passer à l'étape de double authentification. Un attaquant peut donc obtenir un JWT valide en fournissant uniquement un email valide et un code TOTP — le mot de passe est complètement ignoré. Deuxième problème : aucun rate limiting n'est en place sur cet endpoint, ce qui permet de bruteforcer les 1 000 000 de combinaisons possibles (000000–999999) sans aucune restriction.
 ---
 
 ## La vulnérabilité
