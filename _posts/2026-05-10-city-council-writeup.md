@@ -1,9 +1,12 @@
 ---
 title: "City Council — Chaining Misconfigurations to Domain Admin"
 date: 2026-05-10 00:00:00 +0000
-categories: [Writeup]
-tags: [active-directory, kerberoasting, ntlm, dpapi, bloodhound, winrm, iis, aspx, webshell, seimpersonateprivilege, efspotato, cve-2021-36942, impacket, responder, ntlm-theft, targeted-kerberoast, acl-abuse, writedacl, genericwrite, pyinstaller, reverse-engineering, smb, hacksmarter]
-description: "Compromission complète d'un domaine Active Directory en enchaînant 12 misconfigurations — de zéro credential jusqu'au Domain Admin."
+categories: [Writeups, HackSmarter]
+tags: [active-directory, kerberoasting, ntlm, dpapi, bloodhound, winrm, privilege-escalation, impacket, responder, acl-abuse, reverse-engineering, smb]
+description: "Full AD domain compromise chaining 12 misconfigurations — from zero credentials to Domain Admin."
+image:
+  path: /assets/img/posts/city-council/banner.png
+  alt: "City Council — AD Attack Chain"
 ---
 
 ## Vue d'ensemble
