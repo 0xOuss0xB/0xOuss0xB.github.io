@@ -1,14 +1,19 @@
 ---
 title: "Bypass MFA : Quand le TOTP remplace le mot de passe au lieu de le compléter"
-date: 2026-10-24
+date: 2026-10-24 10:00:00 +0200
 categories: [Web Security]
 tags: [authentication-bypass, mfa, otp, bruteforce, cwe-307]
 description: "Bypass complet du MFA : l'endpoint TOTP ne vérifie jamais le mot de passe."
 ---
 
-## TL;DR
+> **TL;DR** — Lors d'un pentest, on identifie que l'endpoint de vérification TOTP (/api/authentication/verifyTotp) ne vérifie pas si le mot de passe a été validé avant de passer à l'étape de double authentification. Un attaquant peut donc obtenir un JWT valide en fournissant uniquement un email valide et un code TOTP — le mot de passe est complètement ignoré. Deuxième problème : aucun rate limiting n'est en place sur cet endpoint, ce qui permet de bruteforcer les 1 000 000 de combinaisons possibles (000000–999999) sans aucune restriction.
+{: .prompt-info }
 
-Lors d'un pentest, on identifie que l'endpoint de vérification TOTP (/api/authentication/verifyTotp) ne vérifie pas si le mot de passe a été validé avant de passer à l'étape de double authentification. Un attaquant peut donc obtenir un JWT valide en fournissant uniquement un email valide et un code TOTP — le mot de passe est complètement ignoré. Deuxième problème : aucun rate limiting n'est en place sur cet endpoint, ce qui permet de bruteforcer les 1 000 000 de combinaisons possibles (000000–999999) sans aucune restriction.
+| | |
+|---|---|
+| **Contexte** | Pentest web / API |
+| **Sévérité** | <span class="sev sev-critical">Critique</span> — CVSS 9.1 |
+| **CWE** | [CWE-307](https://cwe.mitre.org/data/definitions/307.html), [CWE-288](https://cwe.mitre.org/data/definitions/288.html) |
 
 ## La vulnérabilité
 

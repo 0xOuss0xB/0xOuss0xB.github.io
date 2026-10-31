@@ -1,25 +1,22 @@
 ---
 title: "StellarComms — HackSmarter AD Writeup"
-date: 2026-05-12
+date: 2026-05-12 10:00:00 +0200
 categories: [Writeups, HackSmarter]
 tags: [active-directory, bloodhound, dcsync, gmsa, acl-abuse, winrm, credential-theft]
 description: "HackSmarter lab — from a single username to full domain compromise via gMSA abuse and DCSync."
 ---
 
-# StellarComms — Writeup
+> **TL;DR** — À partir d'un simple nom d'utilisateur, un PDF sur un FTP anonyme livre un mot de passe par défaut. Une suite d'abus d'ACL (WriteOwner, WriteDACL), des credentials Firefox et la lecture d'un mot de passe gMSA mènent à un DCSync et au Domain Admin.
+{: .prompt-info }
 
-**Lab :** HackSmarter  
-**Difficulté :** Medium  
-**Cible :** DC-STELLAR.stellarcomms.local — 10.1.235.7  
-**OS :** Windows Server 2019
-
----
-
-## Objectif
-
-A partir d'un simple nom d'utilisateur (`junior.analyst`)  sans mot de passe connu, l'objectif est de compromettre entièrement le domaine `stellarcomms.local` et d'obtenir un accès en tant que Domain Admin.
-
----
+| | |
+|---|---|
+| **Plateforme** | HackSmarter |
+| **Difficulté** | Medium |
+| **Cible** | `DC-STELLAR.stellarcomms.local` — `10.1.235.7` |
+| **OS** | Windows Server 2019 |
+| **Point de départ** | Nom d'utilisateur `junior.analyst`, sans mot de passe |
+| **Techniques** | FTP anonyme, ACL abuse, Firefox credentials, ReadGMSAPassword, DCSync |
 
 ## Chaîne d'attaque
 

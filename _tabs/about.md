@@ -3,45 +3,38 @@ icon: fas fa-user-secret
 order: 4
 ---
 
-# 0xOuss0xB
+**Pentester** — je casse des choses professionnellement pour qu'elles soient corrigées avant que quelqu'un d'autre ne s'en charge.
 
-**Penetration Tester** — Breaking things professionally so you can fix them before someone else does.
+## Qui suis-je
 
----
+Je suis pentester dans un cabinet de cybersécurité qualifié PASSI, en France. Mes audits couvrent les applications web et les API, les environnements Active Directory, les applications mobiles, le cloud et les systèmes industriels.
 
-## Who am I
-
-I'm a pentester at a PASSI-qualified cybersecurity firm in France, specializing in offensive security across multiple domains. My work spans web applications, APIs, Active Directory environments, mobile apps, cloud infrastructure, and industrial systems.
-
-Before diving into pentesting full-time, I completed an engineering degree at ENSEIRB-MATMECA (Bordeaux) and a research internship at the High Security Laboratory (LHS) at LORIA, where I co-authored a paper on monitoring cryptographic function execution — published at the FPS (Foundations and Practice of Security) conference.
+Avant de me consacrer au pentest, j'ai obtenu un diplôme d'ingénieur à l'ENSEIRB-MATMECA (Bordeaux) et effectué un stage de recherche au Laboratoire de Haute Sécurité (LHS) du LORIA, où j'ai co-écrit un article sur la surveillance de l'exécution de fonctions cryptographiques, publié à la conférence FPS (Foundations and Practice of Security).
 
 ## Certifications
 
-| Cert | Focus |
-|------|-------|
-| **BSCP** | Burp Suite Certified Practitioner — Web exploitation |
+| Certification | Domaine |
+|---------------|---------|
+| **BSCP** | Burp Suite Certified Practitioner — exploitation web |
 | **eWPTX** | eLearnSecurity Web Penetration Tester eXtreme |
 | **CRTP** | Certified Red Team Professional — Active Directory |
 | **PJPT** | Practical Junior Penetration Tester |
 | **eJPT** | eLearnSecurity Junior Penetration Tester |
 
-**In progress:** OSCP, CRTO, PASSI TI qualification
+**En cours :** OSCP, CRTO, qualification PASSI TI
 
-## What you'll find here
+## Ce que vous trouverez ici
 
-This blog is a mix of:
+| Type d'article | Contenu |
+|----------------|---------|
+| **Notions** | Un protocole ou un mécanisme expliqué de bout en bout : fonctionnement, attaques, vulnérabilités, détection, recommandations et bonnes pratiques (Kerberos, NTLM, LDAP…) |
+| **Writeups** | Walkthroughs de labs et CTF (HackTheBox, HackSmarter…) |
+| **Findings** | Vulnérabilités rencontrées en audit, anonymisées |
+| **CVE & outils** | Analyses de CVE, outils et scripts |
 
-- **Writeups** — Lab and CTF walkthroughs (HackTheBox, HackSmarter, and more)
-- **Web Security** — Real-world web exploitation techniques and methodology
-- **Active Directory** — AD attack chains, from initial foothold to domain admin
-- **CVE Analysis** — Deep dives into vulnerabilities I research or encounter in the field
-- **Tools & Techniques** — Reviews, custom scripts, and automation for pentesters
-- **AI & Cybersecurity** — Where AI meets offensive security
-- **Field Notes** — Anonymized insights from professional engagements
+Tout ce qui est publié ici vient de la pratique : labs, certifications et missions réelles.
 
-Everything here comes from hands-on experience — labs, certifications, and real-world engagements.
-
-## Connect
+## Contact
 
 - [GitHub](https://github.com/0xOuss0xB)
 - [LinkedIn](https://www.linkedin.com/in/oussama-ben-moussa-113196281)

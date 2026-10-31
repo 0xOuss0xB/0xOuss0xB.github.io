@@ -1,69 +1,64 @@
 ---
-title: "BOX_NAME — PLATFORM Writeup"
-date: YYYY-MM-DD
-categories: [Writeups, PLATFORM]    # PLATFORM: HTB, HackSmarter, TryHackMe, etc.
+title: "NOM_DU_LAB — Writeup PLATEFORME"
+date: 2026-01-01 10:00:00 +0100
+categories: [Writeups, PLATEFORME]   # PLATEFORME : HTB, HackSmarter, TryHackMe, VulnLab…
 tags: [tag1, tag2, tag3]
-description: "One-line summary of the attack chain."
+description: "Une phrase qui résume la chaîne d'attaque."
 image:
-  path: /assets/img/posts/SLUG/banner.png
-  alt: "BOX_NAME banner"
+  path: /assets/img/posts/NOM_DU_LAB/banner.png
+  alt: "NOM_DU_LAB"
 ---
 
-## Overview
+> **TL;DR** — Point de départ, 2-3 étapes clés, objectif atteint.
+{: .prompt-info }
 
-| Property | Value |
-|----------|-------|
-| **Platform** | HackTheBox / HackSmarter / TryHackMe |
-| **Difficulty** | Easy / Medium / Hard / Insane |
-| **Target** | `10.x.x.x` — `hostname.domain.local` |
+| | |
+|---|---|
+| **Plateforme** | HackTheBox / HackSmarter / TryHackMe |
+| **Difficulté** | Easy / Medium / Hard |
+| **Cible** | `HOSTNAME.domaine.local` — `10.x.x.x` |
 | **OS** | Windows Server 2019 / Linux |
-| **Key Techniques** | Technique 1, Technique 2, Technique 3 |
+| **Point de départ** | Aucun credential / utilisateur fourni |
+| **Techniques** | Technique 1, Technique 2, Technique 3 |
 
-## Attack Chain Summary
+## Chaîne d'attaque
 
+```text
+Point d'entrée → utilisateur A
+    ↓
+Technique → utilisateur B
+    ↓
+Technique → Domain Admin
 ```
-Initial Access → Lateral Movement → Privilege Escalation → Objective
-    ↓                  ↓                    ↓                  ↓
-  Detail            Detail               Detail             Detail
-```
 
-## Reconnaissance
+## 1. Reconnaissance
 
-### Port Scanning
+### 1.1 Scan de ports
 
 ```bash
 nmap -sC -sV -oA scans/initial TARGET_IP
 ```
 
-### Service Enumeration
+### 1.2 Énumération des services
 
-<!-- Detail each interesting service -->
+## 2. Accès initial
 
-## Initial Access
+<!-- Pour chaque étape : Principe (le pourquoi) → Exploitation (le comment) → Résultat -->
 
-<!-- How you got the first foothold -->
+### 2.1 Principe
 
-## Lateral Movement
+### 2.2 Exploitation
 
-<!-- If applicable — pivoting between hosts/users -->
+## 3. Mouvement latéral
 
-## Privilege Escalation
+## 4. Élévation de privilèges
 
-<!-- The path to root/admin/DA -->
+## Recommandations
 
-## Post-Exploitation
+| Constat | Recommandation |
+|---------|----------------|
+| … | … |
 
-<!-- Flags, loot, interesting findings -->
+## Ce que j'en retiens
 
-## Lessons Learned
-
-<!-- Key takeaways for defenders and attackers -->
-
-| Attack Step | Mitigation |
-|-------------|------------|
-| Step 1 | How to prevent it |
-| Step 2 | How to prevent it |
-
----
-
-> **Disclaimer:** This writeup is for educational purposes only. Always obtain proper authorization before testing.
+<!-- 2-3 points de méthodo réutilisables en audit -->

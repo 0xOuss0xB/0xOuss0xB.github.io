@@ -3,16 +3,16 @@
 # Import the theme
 theme: jekyll-theme-chirpy
 
-lang: en
+lang: fr-FR
 timezone: Europe/Paris
 
 title: 0xOuss0xB
-tagline: "Pentester • Offensive Security • From the Field"
+tagline: "Pentester • Sécurité offensive • Retours du terrain"
 
 description: >-
-  Offensive security blog by 0xOuss0xB — web exploitation, Active Directory attacks,
-  CVE analysis, tool reviews, AI & cyber, and real-world pentest insights.
-  Notes from the trenches of a professional pentester.
+  Blog de sécurité offensive par 0xOuss0xB — Active Directory, sécurité web,
+  writeups de labs, analyses de CVE et retours de pentest. Pour chaque notion :
+  fonctionnement, attaques, vulnérabilités, détection et recommandations.
 
 url: "https://0xouss0xb.github.io"
 

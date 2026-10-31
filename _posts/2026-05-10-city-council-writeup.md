@@ -1,18 +1,25 @@
 ---
 title: "City Council — Chaining Misconfigurations to Domain Admin"
-date: 2026-05-10 00:00:00 +0000
+date: 2026-05-10 10:00:00 +0200
 categories: [Writeups, HackSmarter]
 tags: [active-directory, kerberoasting, ntlm, dpapi, bloodhound, winrm, privilege-escalation, impacket, responder, acl-abuse, reverse-engineering, smb]
 description: "Full AD domain compromise chaining 12 misconfigurations — from zero credentials to Domain Admin."
 ---
 
-## Vue d'ensemble
+> **TL;DR** — Compromission complète du domaine `city.local` à partir de **zéro credential** : des credentials hardcodés dans un binaire ouvrent la porte, puis Kerberoasting, capture NTLM, DPAPI et abus d'ACL s'enchaînent jusqu'à un webshell IIS et `SYSTEM` via EfsPotato.
+{: .prompt-info }
 
-Ce lab présente une compromission complète d'un domaine Active Directory à partir de **zéro credential**. Chaque étape exploite une misconfiguration qui permet d'accéder à de nouveaux credentials ou privilèges, formant une chaîne menant jusqu'au Domain Admin.
+| | |
+|---|---|
+| **Plateforme** | HackSmarter |
+| **Cible** | DC du domaine `city.local` — `10.0.29.184` |
+| **OS** | Windows Server |
+| **Point de départ** | Aucun credential |
+| **Techniques** | Reverse PyInstaller, Kerberoasting, NTLM capture, Targeted Kerberoast, DPAPI, ACL abuse, EfsPotato |
 
-**Cible :** `10.0.29.184` — DC du domaine `city.local`
+## Chaîne d'attaque
 
-### Chaîne d'attaque
+Chaque étape exploite une mauvaise configuration qui donne accès à de nouveaux credentials ou privilèges :
 
 ```
 Site web → emails @city.local (information leakage)
@@ -733,7 +740,7 @@ curl "http://10.0.29.184/uploads/shell.aspx?cmd=C:\Temp\efs.exe%20%22net%20local
 ---
 
 
-Après avoir ajouté `sam.brooks` aux admins locaux du DC, on peut extraire le flag root. :
+Après avoir ajouté `sam.brooks` aux admins locaux du DC, on récupère le flag root :
 
 
 ![evil-winrm en tant qu'Administrator + root flag](/assets/img/posts/city-council/root-flag.png)
@@ -746,7 +753,7 @@ Après avoir ajouté `sam.brooks` aux admins locaux du DC, on peut extraire le f
 
 - Ne jamais exposer des adresses email internes sur un site web public
 - Ne jamais hardcoder des credentials dans un binaire, même obfusqués
-- Activer **SMB Signing** sur tous les hôtes pour bloquer la capture NTLM
+- Bloquer les connexions SMB sortantes et désactiver NTLM (ou restreindre NTLMv2) pour limiter la capture de hash ; activer **SMB Signing** pour empêcher le relais
 - Auditer régulièrement les ACLs AD avec **BloodHound**
 - Chiffrer et restreindre l'accès aux backups de profils
 - Désactiver NTLM ou utiliser **Protected Users** pour les comptes sensibles

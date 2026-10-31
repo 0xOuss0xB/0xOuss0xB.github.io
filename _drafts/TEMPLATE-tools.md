@@ -1,6 +1,6 @@
 ---
 title: "TOOL_NAME — Review & Usage Guide"
-date: YYYY-MM-DD
+date: 2026-01-01 10:00:00 +0100
 categories: [Tools]
 tags: [tools, tag1, tag2]    # e.g.: reconnaissance, exploitation, post-exploitation, automation
 description: "One-line summary."

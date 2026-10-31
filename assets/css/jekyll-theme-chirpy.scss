@@ -1,0 +1,98 @@
+---
+---
+
+@use 'abstracts/variables' with (
+  $theme: '{{ site.theme_mode }}'
+);
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* append your custom style below */
+
+/* ---------- Structure des articles ---------- */
+
+.content {
+  /* Sections principales : barre d'accent + filet pour bien découper l'article */
+  h2 {
+    margin-top: 2.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--main-border-color);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 0.95em;
+      margin-right: 0.6rem;
+      border-radius: 2px;
+      background: var(--link-color);
+      vertical-align: -0.1em;
+    }
+  }
+
+  h3 {
+    margin-top: 2rem;
+  }
+
+  /* Le filet du h2 remplace les "---" posés juste avant un titre */
+  hr:has(+ h2) {
+    display: none;
+  }
+
+  /* Tableaux (recommandations, options d'outils, détection) */
+  .table-wrapper > table {
+    thead th {
+      background: var(--card-header-bg, rgba(127, 127, 127, 0.08));
+    }
+
+    tbody tr:hover {
+      background: rgba(127, 127, 127, 0.06);
+    }
+
+    td,
+    th {
+      vertical-align: top;
+    }
+  }
+
+  /* Chaînes d'attaque et sorties d'outils un peu plus aérées */
+  div.highlighter-rouge {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Badges de sévérité : <span class="sev sev-critical">Critique</span> */
+.sev {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+
+  &.sev-critical {
+    background: #b3261e;
+  }
+
+  &.sev-high {
+    background: #d9480f;
+  }
+
+  &.sev-medium {
+    background: #b08900;
+  }
+
+  &.sev-low {
+    background: #2b8a3e;
+  }
+
+  &.sev-info {
+    background: #1971c2;
+  }
+}
