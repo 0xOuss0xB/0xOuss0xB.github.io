@@ -12,12 +12,163 @@
 {%- endif -%}
 ';
 
-/* append your custom style below */
+/* =====================================================================
+   0xOuss0xB — surcouche visuelle
+   Accents cyan → indigo, effets modernes, 100% CSS.
+   Tout le mouvement est encadré par prefers-reduced-motion.
+   ===================================================================== */
 
-/* ---------- Structure des articles ---------- */
+:root {
+  --cc-accent: #2dd4bf;
+  --cc-accent-2: #7c9bff;
+  --cc-accent-3: #c084fc;
+  --cc-grad: linear-gradient(135deg, var(--cc-accent), var(--cc-accent-2) 55%, var(--cc-accent-3));
+  --cc-glow: rgba(45, 212, 191, 0.35);
+  --cc-glow-2: rgba(124, 155, 255, 0.28);
+  --cc-ring: rgba(45, 212, 191, 0.55);
+  --cc-card-border: rgba(125, 155, 255, 0.14);
+}
+
+/* En mode sombre, on aligne la couleur de lien sur l'accent */
+html:not([data-mode='light']) {
+  --link-color: var(--cc-accent);
+}
+
+html[data-mode='light'] {
+  --cc-accent: #0d9488;
+  --cc-accent-2: #4f6bed;
+  --cc-accent-3: #9333ea;
+  --cc-glow: rgba(13, 148, 136, 0.18);
+  --cc-glow-2: rgba(79, 107, 237, 0.15);
+  --cc-card-border: rgba(79, 107, 237, 0.18);
+}
+
+/* ---------- Fond : nébuleuse discrète ---------- */
+
+body {
+  background-image:
+    radial-gradient(42rem 42rem at 85% -5%, var(--cc-glow-2), transparent 60%),
+    radial-gradient(38rem 38rem at -10% 15%, var(--cc-glow), transparent 55%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Barre de progression de lecture ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 2000;
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      background: var(--cc-grad);
+      box-shadow: 0 0 12px var(--cc-glow);
+      animation: cc-progress linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    @keyframes cc-progress {
+      to {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+/* ---------- Sidebar : titre dégradé + halo + anneau d'avatar ---------- */
+
+#sidebar {
+  position: relative;
+  overflow: hidden;
+
+  .site-title a {
+    background: var(--cc-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    transition: filter 0.3s ease;
+  }
+
+  .site-title a:hover {
+    filter: drop-shadow(0 0 10px var(--cc-glow));
+  }
+
+  .site-subtitle {
+    opacity: 0.85;
+  }
+}
+
+/* Halo animé derrière le profil */
+#sidebar::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--cc-glow) 0%, transparent 62%);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #sidebar::before {
+    animation: cc-breathe 9s ease-in-out infinite;
+  }
+
+  @keyframes cc-breathe {
+    0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.7; transform: translateX(-50%) scale(1.12); }
+  }
+}
+
+#sidebar .profile-wrapper,
+#sidebar .nav,
+#sidebar .sidebar-bottom {
+  position: relative;
+  z-index: 1;
+}
+
+/* Anneau dégradé autour de l'avatar */
+#avatar {
+  position: relative;
+  border: 0 !important;
+  box-shadow: 0 0 0 2px var(--cc-ring), 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+#avatar:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 0 0 2px var(--cc-accent), 0 0 22px var(--cc-glow), 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- Liens de contenu : soulignement dégradé animé ---------- */
+
+.content a:not(.img-link):not([class*='btn']) {
+  background-image: var(--cc-grad);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  transition: background-size 0.25s ease;
+  text-decoration: none;
+}
+
+.content a:not(.img-link):not([class*='btn']):hover {
+  background-size: 100% 2px;
+}
+
+/* ---------- Titres de section ---------- */
 
 .content {
-  /* Sections principales : barre d'accent + filet pour bien découper l'article */
   h2 {
     margin-top: 2.75rem;
     padding-bottom: 0.4rem;
@@ -26,11 +177,12 @@
     &::before {
       content: '';
       display: inline-block;
-      width: 4px;
+      width: 5px;
       height: 0.95em;
       margin-right: 0.6rem;
-      border-radius: 2px;
-      background: var(--link-color);
+      border-radius: 3px;
+      background: var(--cc-grad);
+      box-shadow: 0 0 10px var(--cc-glow);
       vertical-align: -0.1em;
     }
   }
@@ -39,19 +191,105 @@
     margin-top: 2rem;
   }
 
-  /* Le filet du h2 remplace les "---" posés juste avant un titre */
   hr:has(+ h2) {
     display: none;
   }
+}
 
-  /* Tableaux (recommandations, options d'outils, détection) */
+/* ---------- Cartes de la page d'accueil ---------- */
+
+#post-list .card-wrapper {
+  position: relative;
+  border: 1px solid var(--cc-card-border) !important;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  isolation: isolate;
+}
+
+/* Liseré dégradé en haut de carte, révélé au survol */
+#post-list .card-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--cc-grad);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.4s ease;
+  z-index: 3;
+}
+
+#post-list .card-wrapper:hover {
+  transform: translateY(-6px);
+  border-color: var(--cc-ring) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), 0 0 24px var(--cc-glow-2);
+}
+
+#post-list .card-wrapper:hover::before {
+  transform: scaleX(1);
+}
+
+#post-list .card-wrapper .preview-img img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#post-list .card-wrapper:hover .preview-img img {
+  transform: scale(1.06);
+}
+
+#post-list .card-wrapper .card-title {
+  transition: color 0.3s ease;
+}
+
+#post-list .card-wrapper:hover .card-title {
+  color: var(--cc-accent);
+}
+
+/* ---------- Blocs de code ---------- */
+
+.content {
+  div.highlighter-rouge {
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--cc-card-border);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+
+  .highlight {
+    scrollbar-width: thin;
+  }
+
+  .highlight::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .highlight::-webkit-scrollbar-thumb {
+    background: var(--cc-ring);
+    border-radius: 8px;
+  }
+}
+
+/* Barre de titre de bloc de code (filename) en dégradé */
+.content .code-header {
+  border-bottom: 1px solid var(--cc-card-border);
+}
+
+/* ---------- Tableaux ---------- */
+
+.content {
   .table-wrapper > table {
     thead th {
-      background: var(--card-header-bg, rgba(127, 127, 127, 0.08));
+      background: var(--card-header-bg, rgba(125, 155, 255, 0.1));
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
     }
 
     tbody tr:hover {
-      background: rgba(127, 127, 127, 0.06);
+      background: rgba(125, 155, 255, 0.07);
     }
 
     td,
@@ -59,40 +297,87 @@
       vertical-align: top;
     }
   }
-
-  /* Chaînes d'attaque et sorties d'outils un peu plus aérées */
-  div.highlighter-rouge {
-    margin-bottom: 1.5rem;
-  }
 }
 
-/* Badges de sévérité : <span class="sev sev-critical">Critique</span> */
+/* ---------- Encadrés prompt ---------- */
+
+.content .prompt-info,
+.content .prompt-tip,
+.content .prompt-warning,
+.content .prompt-danger {
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(2px);
+}
+
+/* ---------- Badges de sévérité ---------- */
+
 .sev {
   display: inline-block;
-  padding: 0.05rem 0.5rem;
-  border-radius: 0.75rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 0.8rem;
   font-size: 0.8rem;
   font-weight: 600;
   white-space: nowrap;
   color: #fff;
+  box-shadow: 0 0 10px -2px currentcolor;
 
-  &.sev-critical {
-    background: #b3261e;
+  &.sev-critical { background: #b3261e; }
+  &.sev-high { background: #d9480f; }
+  &.sev-medium { background: #b08900; }
+  &.sev-low { background: #2b8a3e; }
+  &.sev-info { background: #1971c2; }
+}
+
+/* ---------- TOC ---------- */
+
+#toc-wrapper .toc .is-active-link,
+#toc-wrapper .toc .active > .toc-link {
+  color: var(--cc-accent) !important;
+  border-left-color: var(--cc-accent) !important;
+}
+
+/* ---------- Tags ---------- */
+
+.post-tag {
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.post-tag:hover {
+  transform: translateY(-2px);
+  background: var(--cc-grad) !important;
+  color: #fff !important;
+}
+
+/* ---------- Révélation au scroll (progressive, sûre si non supportée) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    #post-list .card-wrapper,
+    .content > h2,
+    .content > h3,
+    .content > p,
+    .content > .table-wrapper,
+    .content > div.highlighter-rouge,
+    .content > blockquote {
+      animation: cc-reveal both cubic-bezier(0.22, 1, 0.36, 1);
+      animation-timeline: view();
+      animation-range: entry 0% cover 18%;
+    }
+
+    @keyframes cc-reveal {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   }
+}
 
-  &.sev-high {
-    background: #d9480f;
-  }
+/* ---------- Respect du mode réduit ---------- */
 
-  &.sev-medium {
-    background: #b08900;
-  }
-
-  &.sev-low {
-    background: #2b8a3e;
-  }
-
-  &.sev-info {
-    background: #1971c2;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
