@@ -63,9 +63,9 @@ theme_mode: dark
 
 cdn:
 
-avatar:
+avatar: /assets/img/avatar.png
 
-social_preview_image:
+social_preview_image: /assets/img/og-default.png
 
 toc: true
 
@@ -73,9 +73,9 @@ comments:
   provider: giscus
   giscus:
     repo: 0xOuss0xB/0xOuss0xB.github.io
-    repo_id:
-    category:
-    category_id:
+    repo_id: R_kgDOSY6Eew
+    category: Announcements
+    category_id: DIC_kwDOSY6Ee84DKHN3
     mapping: pathname
     strict: 0
     input_position: bottom
