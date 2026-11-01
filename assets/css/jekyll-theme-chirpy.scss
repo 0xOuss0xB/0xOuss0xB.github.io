@@ -81,46 +81,59 @@ body {
   }
 }
 
-/* ---------- Sidebar : titre dégradé + halo + anneau d'avatar ---------- */
+/* ---------- Sidebar : titre dégradé + halo + anneau d'avatar ----------
+   Important : sous ~1200px (lg) la sidebar est hors-écran (slide). On ne
+   touche donc NI à sa position NI à son overflow en dehors du bureau,
+   sinon elle réapparaît dans le flux (gros bloc vide en haut sur mobile). */
 
-#sidebar {
-  position: relative;
-  overflow: hidden;
+/* Titre en dégradé : sans danger sur toutes tailles */
+#sidebar .site-title a {
+  background: var(--cc-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: filter 0.3s ease;
+}
 
-  .site-title a {
-    background: var(--cc-grad);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    transition: filter 0.3s ease;
+#sidebar .site-title a:hover {
+  filter: drop-shadow(0 0 10px var(--cc-glow));
+}
+
+#sidebar .site-subtitle {
+  opacity: 0.85;
+}
+
+/* Halo + mise en contexte : UNIQUEMENT quand la sidebar est le panneau
+   fixe de gauche (>= 1200px). */
+@media (min-width: 1200px) {
+  #sidebar {
+    overflow: hidden; /* la sidebar est déjà position:fixed à cette taille */
   }
 
-  .site-title a:hover {
-    filter: drop-shadow(0 0 10px var(--cc-glow));
+  #sidebar::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    width: 150%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, var(--cc-glow) 0%, transparent 62%);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .site-subtitle {
-    opacity: 0.85;
+  #sidebar .profile-wrapper,
+  #sidebar .nav,
+  #sidebar .sidebar-bottom {
+    position: relative;
+    z-index: 1;
   }
 }
 
-/* Halo animé derrière le profil */
-#sidebar::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  left: 50%;
-  width: 150%;
-  aspect-ratio: 1;
-  transform: translateX(-50%);
-  background: radial-gradient(circle, var(--cc-glow) 0%, transparent 62%);
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
   #sidebar::before {
     animation: cc-breathe 9s ease-in-out infinite;
   }
@@ -129,13 +142,6 @@ body {
     0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(1); }
     50% { opacity: 0.7; transform: translateX(-50%) scale(1.12); }
   }
-}
-
-#sidebar .profile-wrapper,
-#sidebar .nav,
-#sidebar .sidebar-bottom {
-  position: relative;
-  z-index: 1;
 }
 
 /* Anneau dégradé autour de l'avatar */
