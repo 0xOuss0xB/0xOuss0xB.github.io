@@ -378,6 +378,18 @@ body {
   }
 }
 
+/* ---------- Figures SVG (schémas dans les articles) ---------- */
+
+.content .svg-figure {
+  margin: 1.8rem 0;
+  text-align: center;
+}
+
+.content .svg-figure svg {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 20px var(--cc-glow-2);
+}
+
 /* ---------- Respect du mode réduit ---------- */
 
 @media (prefers-reduced-motion: reduce) {
