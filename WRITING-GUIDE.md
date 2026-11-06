@@ -26,6 +26,7 @@ Peu de catégories, beaucoup de tags. Une catégorie n'apparaît sur le site qu'
 | `Web Security` | Notions et findings web / API | `web/` |
 | `Writeups` + sous-catégorie | `[Writeups, HTB]`, `[Writeups, HackSmarter]`, `[Writeups, TryHackMe]`, `[Writeups, VulnLab]` | un dossier par lab (`city-council/`) |
 | `CVE Analysis` | Analyses de CVE | `cve/` |
+| `Techniques` | Techniques offensives et post-exploitation : Shadow Copy, EDR bypass, pivoting… | `techniques/` |
 | `Tools` | Outils, scripts | `tools/` |
 | `Pentest Notes` | Méthodo, retours terrain, IA & cyber | `articles/` |
 
