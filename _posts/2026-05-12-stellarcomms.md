@@ -40,9 +40,7 @@ DCSync → hash Administrator → Domain Admin 🏆
 
 **Cible :** 10.1.235.7
 
-On commence par un scan rapide des ports ouverts avec **rustscan**, puis on passe les résultats à **nmap** pour la détection des services.
-
-Rustscan est un scanner de ports ultra-rapide écrit en Rust. Il envoie des milliers de paquets en parallèle pour découvrir les ports ouverts en quelques secondes, puis passe automatiquement les résultats à nmap pour la détection des services et versions. C'est le meilleur des deux mondes : la vitesse de rustscan + la puissance de nmap.
+Scan rapide avec **rustscan** + **nmap** pour la détection des services :
 
 ```bash
 rustscan -b 500 -a 10.1.235.7 -- -sC -sV -Pn
@@ -77,15 +75,13 @@ La présence combinée de plusieurs ports caractéristiques confirme qu'on est f
 | 5985 | WinRM | Administration distante PowerShell |
 | 9389 | ADWS | Active Directory Web Services |
 
-Le service **Kerberos sur le port 88** est le signal le plus fort, ce protocole est uniquement présent sur les DCs. Nmap confirme le nom de domaine : `stellarcomms.local`.
+Nmap confirme le nom de domaine : `stellarcomms.local`.
 
 ---
 
 ### 1.2 Enumération FTP — Découverte du mot de passe par défaut
 
-On découvre un serveur **FTP sur le port 21**. FTP (File Transfer Protocol) est un protocole de transfert de fichiers entre un client et un serveur. Il est ancien, non chiffré par défaut, et encore très présent dans les environnements d'entreprise pour partager des documents internes.
-
-Le premier réflexe est de tester la **connexion anonyme**. Ce mode permet de se connecter sans credentials valides, en utilisant `anonymous` comme nom d'utilisateur et n'importe quelle valeur comme mot de passe. C'est une configuration souvent laissée active par erreur ou négligence.
+On a un FTP sur le port 21. Premier réflexe : connexion anonyme.
 
 ```bash
 ftp 10.1.235.7
@@ -106,8 +102,6 @@ ftp> mget *
 Parmi les fichiers, on trouve `Stellar_UserGuide.pdf`, un document d'onboarding contenant un **mot de passe par défaut** pour les nouveaux comptes.
 
 ![pdf-onboarding-default-password](/assets/img/posts/stellarcomms/pdf-onboarding-default-password.png)
-
-> **Note :** Les documents d'onboarding sont une cible classique en pentest. Les entreprises y incluent souvent des mots de passe temporaires qui ne sont jamais changés.
 
 ---
 
@@ -133,9 +127,7 @@ echo "10.1.235.7 DC-STELLAR.stellarcomms.local stellarcomms.local DC-STELLAR" | 
 
 ## 3. Enumération AD — BloodHound
 
-Avec le compte valide, on a énuméré les objets de l'AD avec BloodHound.
-
-BloodHound est un outil d'analyse de l'Active Directory qui cartographie toutes les relations entre objets (utilisateurs, groupes, ordinateurs, GPO…) et les permissions associées. Il collecte les données via LDAP et les stocke dans une base de données graphe **Neo4j**.
+Avec le compte valide, on énumère l'AD avec BloodHound :
 
 ```bash
 bloodhound-ce.py --zip -c All \
@@ -146,9 +138,7 @@ bloodhound-ce.py --zip -c All \
   -ns 10.1.235.7
 ```
 
-On a trouvé que `junior.analyst` a le droit **WriteOwner** sur le groupe `STELLAROPS-CONTROL`, et ce dernier a le droit **ForceChangePassword** sur `ops.controller`, qui est membre du groupe **Remote Management Users**.
-
-Dans l'Active Directory, chaque objet possède un **propriétaire** qui peut modifier ses permissions à volonté. Le droit **WriteOwner** permet de changer ce propriétaire. En se définissant propriétaire du groupe `STELLAROPS-CONTROL`, on peut ensuite se donner `GenericAll` dessus, s'y ajouter comme membre, et ainsi hériter de la permission `ForceChangePassword` sur `ops.controller`.
+BloodHound montre un chemin de `junior.analyst` jusqu'à un shell WinRM :
 
 ```
 WriteOwner sur le groupe
@@ -301,11 +291,7 @@ Les credentials de `astro.researcher` sont récupérés en clair ✅
 
 ## 6. Pivot vers eng.payload — WriteDACL
 
-### Le droit WriteDACL
-
-Dans l'Active Directory, chaque objet possède une **DACL** (Discretionary Access Control List), la liste qui définit qui a le droit de faire quoi sur cet objet. **WriteDACL** permet de modifier cette liste.
-
-BloodHound révèle que `astro.researcher` a `WriteDACL` sur `eng.payload`. En s'accordant `GenericAll` sur ce compte, on peut ensuite forcer un reset de mot de passe sans connaître l'ancien.
+`astro.researcher` a `WriteDACL` sur `eng.payload` — on se donne `GenericAll` puis on reset le mot de passe.
 
 **Étape 1 — Se donner GenericAll sur eng.payload :**
 

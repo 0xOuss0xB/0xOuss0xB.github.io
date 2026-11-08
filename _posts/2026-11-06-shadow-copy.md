@@ -19,7 +19,7 @@ description: "Le Volume Shadow Copy Service (VSS) permet de copier SAM, SYSTEM e
 
 ## 1. Le contexte
 
-Après avoir obtenu un accès admin local sur une machine, l'extraction des credentials est une étape clé. Trois fichiers du registre sont ciblés, chacun avec un rôle précis :
+Après avoir obtenu un accès admin local sur une machine, la première chose qu'on fait, c'est extraire les credentials. Trois fichiers du registre sont ciblés :
 
 - **SAM** (`C:\Windows\System32\config\SAM`) — contient les **hash NTLM des comptes locaux** de la machine : le compte Administrateur local (RID 500) et tout autre compte créé localement. Ces hash peuvent être craqués offline ou réutilisés en pass-the-hash pour pivoter si le même mot de passe admin local est réutilisé (absence de LAPS).
 
@@ -63,7 +63,7 @@ Le fichier de sortie créé côté cible est détecté et supprimé par l'EDR av
 
 ## 3. La technique : Shadow Copy (VSS)
 
-Le **Volume Shadow Copy Service** est un service Windows légitime utilisé pour les sauvegardes. Il crée un **snapshot figé** du système de fichiers à un instant T. Les fichiers dans ce snapshot ne sont pas verrouillés et ne sont pas surveillés de la même manière par l'EDR.
+Le **Volume Shadow Copy Service** (VSS) crée des snapshots figés du volume — le même mécanisme que les sauvegardes Windows. Les fichiers dans ce snapshot ne sont pas verrouillés et ne sont pas surveillés de la même manière par l'EDR.
 
 ### 3.1 Pourquoi ça passe
 
@@ -196,8 +196,6 @@ vssadmin delete shadows /for=C: /quiet
 
 ## 5. Détection
 
-Pour les défenseurs, voici les indicateurs à surveiller :
-
 | Indicateur | Source | Signal |
 |---|---|---|
 | Création d'un shadow copy | **Event 8222** (VSS) | Création inattendue hors fenêtre de backup |
@@ -222,9 +220,6 @@ Pour les défenseurs, voici les indicateurs à surveiller :
 | **Restreindre `SeBackupPrivilege`** — ne l'accorder qu'aux comptes de backup dédiés | Réduit les comptes capables de lire des fichiers protégés, notamment via les chemins VSS |
 
 Le shadow copy est une technique simple, native et efficace pour extraire SAM, SYSTEM et SECURITY quand l'EDR bloque les méthodes classiques. Elle exploite un service Windows légitime que l'EDR ne peut pas désactiver sans casser les sauvegardes de production. La majorité des EDR ne détectent toujours pas cette technique de manière fiable, parce qu'elle ne déclenche aucun des patterns habituels : pas d'appel `RegSaveKeyExW`, pas de processus suspect ouvrant un handle sur LSASS, pas d'argument `reg save` en ligne de commande.
-
-> **En résumé** : ne pas se reposer uniquement sur l'EDR pour la protection des credentials. Mettre en place des contrôles complémentaires — LAPS, tiering, Protected Users, monitoring VSS — qui restent efficaces quelle que soit la méthode d'extraction.
-{: .prompt-info }
 
 ## Références
 

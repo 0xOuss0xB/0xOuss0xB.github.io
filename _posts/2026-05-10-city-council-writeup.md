@@ -58,7 +58,7 @@ Administrator → Domain Admin ✓
 
 ## 1. Reconnaissance
 
-La cible est le DC du domaine `city.local`, accessible via VPN à l'adresse `10.0.29.184`. On commence par un scan de ports pour identifier les services exposés.
+La cible est le DC du domaine `city.local`, accessible via VPN à l'adresse `10.0.29.184`.
 
 ### 1.1 Scan de ports
 
@@ -68,8 +68,6 @@ nmap -sC -sV -p- 10.0.29.184
 
 ![Scan nmap](/assets/img/posts/city-council/nmap.png)
 
-Les ports identifiés nous donnent plusieurs informations importantes :
-
 - **Port 80/443** → Serveur web IIS — à explorer pour de l'OSINT
 - **Port 88** → Kerberos — confirme que cette machine est bien un DC
 - **Port 389** → LDAP — base de données Active Directory
@@ -78,7 +76,7 @@ Les ports identifiés nous donnent plusieurs informations importantes :
 
 ### 1.2 Enumération SMB anonyme
 
-Avant d'avoir des credentials, on teste si le DC accepte des connexions anonymes (**null session**) sur SMB. C'est une misconfiguration courante qui permettrait d'énumérer les utilisateurs et les partages sans authentification.
+On teste la null session sur SMB :
 
 ```bash
 nxc smb 10.0.29.184 -u '' -p '' --shares
@@ -86,7 +84,7 @@ nxc smb 10.0.29.184 -u '' -p '' --users
 ```
 
 
-La null session est refusée. Le compte Guest est désactivé. LDAP anonymous bind est également bloqué. Il faudra trouver un autre vecteur pour commencer l'énumération.
+La null session est refusée. Le compte Guest est désactivé. LDAP anonymous bind est également bloqué.
 
 ---
 
@@ -113,16 +111,7 @@ Administrator@city.local  → Email général
 
 ### 2.2 Validation des usernames avec Kerbrute
 
-#### Principe de Kerberos et Kerbrute
-
-**Kerberos** est le protocole d'authentification principal d'Active Directory. Il fonctionne avec un système de tickets distribués par le DC.
-
-Quand un utilisateur veut s'authentifier, il envoie une requête appelée **AS-REQ** (Authentication Service Request) au DC. Ce dernier consulte sa base de données et répond différemment selon que le compte existe ou non :
-
-- Compte **inexistant** → erreur `KDC_ERR_C_PRINCIPAL_UNKNOWN`
-- Compte **existant** → réponse Kerberos normale (même sans mot de passe)
-
-Kerbrute envoie des AS-REQ pour chaque username de notre wordlist et analyse les codes de réponse pour identifier les comptes valides. L'avantage : cette méthode ne génère **pas de logs d'échec d'authentification** (Event ID 4625), ce qui la rend beaucoup moins détectable qu'un spray SMB classique.
+Kerbrute envoie des AS-REQ pour valider les comptes — pas de logs 4625, contrairement à un spray SMB classique. Les détails sur Kerberos sont dans [l'article dédié](/posts/kerberos/).
 
 ```bash
 kerbrute userenum -d city.local --dc 10.0.29.184 users.txt
@@ -161,11 +150,7 @@ wget http://10.0.29.184/city_services_portal.bin
 
 ### 3.2 Extraction du code source (PyInstaller)
 
-#### C'est quoi PyInstaller ?
-
-**PyInstaller** est un outil qui permet d'empaqueter une application Python dans un exécutable autonome (`.exe`, `.bin`). Il emballe l'interpréteur Python, les dépendances et le code source compilé (`.pyc`) dans une seule archive.
-
-Point crucial : **PyInstaller n'encrypte pas le code**, il l'emballe simplement. L'outil `pyinstxtractor` permet de déballer cette archive et de récupérer tous les fichiers `.pyc` à l'intérieur.
+Le binaire est un exécutable PyInstaller — le code Python est juste emballé, pas chiffré. `pyinstxtractor` déballe tout :
 
 ```bash
 python3 pyinstxtractor.py city_services_portal.exe
@@ -201,10 +186,6 @@ DC-CC.city.local
 
 
 ### 3.4 Décodage des credentials
-
-#### C'est quoi le Base64 ?
-
-Le **base64** est un encodage (pas un chiffrement) qui transforme des données en texte ASCII. Il n'y a aucune clé secrète, n'importe qui peut le décoder instantanément. Les développeurs pensaient parfois que l'encodage base64 "cachait" les credentials, mais c'est une fausse sécurité totale.
 
 ```bash
 echo 'c3ZjX3NlcnZpY2VzX3BvcnRhbA==' | base64 -d
@@ -339,13 +320,9 @@ Deux informations critiques dans cet email :
 
 Cela ouvre la voie à une attaque NTLM Hash Capture : si on dépose un fichier piégé dans le share, quand Jon Peters accèdera au dossier, Windows tentera automatiquement de s'authentifier via NTLM vers notre IP.
 
-### 5.3 Principe de l'attaque NTLM Capture
+### 5.3 NTLM Capture
 
-Windows utilise NTLM pour s'authentifier automatiquement sur les ressources réseau. Quand un dossier contient un fichier spécial (comme un raccourci `.lnk`) pointant vers un chemin UNC (`\\IP\share`), Windows tente de récupérer l'icône depuis cette IP.
-
-Pour ce faire, il envoie une **requête d'authentification NTLM** vers notre machine, contenant un hash **NTLMv2** crackable hors ligne.
-
-L'outil [ntlm_theft](https://github.com/Greenwolf/ntlm_theft) génère automatiquement de nombreux types de fichiers piégés. L'outil **Responder** se fait passer pour un serveur SMB et capture les hashes entrants.
+On dépose un `.lnk` piégé ([ntlm_theft](https://github.com/Greenwolf/ntlm_theft)) pointant vers notre IP dans le share — quand Jon y accède, Windows envoie son hash NTLMv2 à **Responder**. Les détails sur NTLM sont dans [l'article dédié](/posts/ntlm/).
 
 ### 5.4 Génération des fichiers piégés et capture
 
@@ -493,14 +470,9 @@ find /tmp/clerk_profile -type f | grep -v '.lnk'
 
 L'email sur le bureau révèle qu'Emma a stocké ses credentials dans le **Credential Manager** de `clerk.john` (protégé par DPAPI). Puisqu'on a les fichiers DPAPI de clerk.john dans le WIM et qu'on connaît son mot de passe (`clerkhill`), on peut tout décrypter.
 
-### 7.3 Principe de DPAPI
+### 7.3 Décryptage DPAPI
 
-**DPAPI** (Data Protection API) est un système de chiffrement Windows qui protège les secrets liés au profil utilisateur. Il fonctionne en deux niveaux :
-
-1. Le **masterkey** est chiffré avec le mot de passe Windows de l'utilisateur + son SID
-2. Les **blobs de credentials** sont chiffrés avec le masterkey
-
-Si on a accès au profil utilisateur ET qu'on connaît son mot de passe → on peut décrypter tous ses secrets DPAPI **hors ligne**.
+DPAPI protège les secrets du profil utilisateur : le masterkey est dérivé du mot de passe + SID, les blobs sont chiffrés avec le masterkey. Mot de passe connu + profil accessible = on décrypte tout offline.
 
 ### 7.4 Décryptage avec impacket
 
@@ -551,13 +523,9 @@ BloodHound révèle qu'`emma.hayes` a des droits très étendus :
 
 ![BloodHound : sam.brooks membre de Remote Management Users](/assets/img/posts/city-council/sam-winrm.png)
 
-### 8.2 Principe de l'abus WriteDacl
+### 8.2 Exploitation
 
-Dans Active Directory, chaque objet possède une **DACL** (Discretionary Access Control List), la liste qui définit qui a le droit de faire quoi sur cet objet. `WriteDacl` permet de modifier cette liste.
-
-En se donnant `FullControl` sur `sam.brooks`, on peut ensuite **forcer un reset de mot de passe** sans connaître l'ancien.
-
-### 8.3 Exploitation
+`WriteDacl` permet de modifier la DACL d'un objet — on se donne `FullControl` sur `sam.brooks`, puis on force un reset de mot de passe :
 
 ```bash
 # Étape 1 : Se donner FullControl sur sam.brooks
@@ -598,11 +566,7 @@ Dans le WIM de `sam.brooks`, un email sur son bureau explique la situation : `we
 
 **Le plan :** Utiliser les droits `WriteDacl` d'`emma.hayes` sur l'OU `CITYOPS` pour s'y donner `FullControl`, puis déplacer `web_admin` hors de la quarantine.
 
-### 9.2 Principe des OUs dans Active Directory
-
-Les **OUs** (Organizational Units) sont des conteneurs dans AD qui regroupent des objets. Placer `web_admin` dans une OU QUARANTINE permet d'isoler le compte. Mais si on a les droits suffisants sur une autre OU, on peut déplacer le compte vers cet endroit où on a le contrôle total.
-
-### 9.3 Exploitation
+### 9.2 Exploitation
 
 ```bash
 # Étape 1 : FullControl sur CITYOPS

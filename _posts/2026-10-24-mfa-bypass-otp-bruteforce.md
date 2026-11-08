@@ -53,7 +53,7 @@ Le serveur ne répond pas `401 Unauthorized`. Il accepte la requête et compare 
 
 ### Pas de rate limiting
 
-Il a été identifié qu'aucun mécanisme de rate limiting n'est en place sur cet endpoint. Pas de lockout, pas de CAPTCHA, pas d'invalidation du code après N échecs.
+Aucun rate limiting sur cet endpoint. Pas de lockout, pas de CAPTCHA, pas d'invalidation du code après N échecs.
 
 La réponse pour un mauvais code fait **93 octets**. Un bon code retourne le JWT dans un body plus large avec `"success":true`.
 
